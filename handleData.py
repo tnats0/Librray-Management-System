@@ -1,8 +1,5 @@
 import mysql.connector as sql
 
-
-
-
 def connect():
 
     global connection 
