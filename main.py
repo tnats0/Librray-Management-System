@@ -27,3 +27,4 @@ with open("isbn2.txt","r") as file:
         print(code,end="")
         menu(code)
 
+display_book_table()
