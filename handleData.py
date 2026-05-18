@@ -29,6 +29,8 @@ def append_book_data(bookData:dict):
 
     cursor.execute(appendCommand)
 
+    disconnect()
+
 def display_book_table():
 
     connect()
@@ -46,6 +48,8 @@ def display_book_table():
 
 
     return table
+
+    disconnect()
 
 
 
