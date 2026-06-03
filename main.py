@@ -1,30 +1,40 @@
 from handleData import *
 from recoverData import *
 
+import dotenv
+import os
+
+dotenv.load_dotenv(".env")
+
+API_KEY = os.getenv("API_KEY")
+
+
+# TODO: Some isbn codes stil cant be fetched info. 
+
 
 def menu(isbn):
 
     try:
 
-        book = find_book(isbn)
-
-        connect()
+        book = find_book(isbn,API_KEY)
 
         append_book_data(book)
 
-        display_book_table()
+    except:
 
-        disconnect()
-
-    except: print("Process failed :(")
+        print("Process Failed :(")
 
 
-with open("isbn2.txt","r") as file:
+def test():
 
-    codes = file.readlines()
+    with open("isbnCodes.txt","r") as file:
 
-    for code in codes:
-        print(code,end="")
-        menu(code)
+        codes = file.readlines()
 
-display_book_table()
+        for code in codes:
+            print(code,end="")
+            menu(code)
+
+    display_book_table()
+
+test()

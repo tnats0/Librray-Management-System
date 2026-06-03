@@ -1,49 +1,62 @@
 from requests import *
+import json
+import dotenv as denv
+import os
+
+denv.load_dotenv(".env")
+
+key = os.getenv("api_key")
 
 
+def get_url(isbn:str,key):
 
-def get_url(isbn:str):
-
-    url = f"https://openlibrary.org/isbn/{isbn}.json"
-
+    url = f"https://www.googleapis.com/books/v1/volumes?q=isbn:{isbn}&key={key}"
 
     return url
 
 
 def get_info(url:str):
     
-    data = get(url,"title")
+    data = get(url)
 
     info = data.json()
 
-    return info
+    return info 
 
 
 def extract_info(info:dict): 
     
-
-    authorKey = info["authors"][0]["key"]
-
-    authorURL = f"https://openlibrary.org/{authorKey}.json"
+    extractedInfo = info["items"][0]["volumeInfo"]
 
     try:
-        authorInfo = get_info(authorURL)["personal_name"]
-    except: authorInfo = "Unknown"
+        publisher = extractedInfo["publisher"]
+    except:
+        publisher = "Unknown"
+
+    bookInfo = {
+
+        "title": extractedInfo["title"],
+        "author": extractedInfo["authors"][0],
+        "publisher": publisher,
+        "isbn": extractedInfo["industryIdentifiers"][1]["identifier"]
+
+    }
+
+    return bookInfo
 
 
-    extractedInfo = {"title":info["title"],"authors":authorInfo,"publishers":info["publishers"][0],"isbn":info["isbn_13"][0]}
+def find_book(isbn:str,key):
 
-
-    return list(extractedInfo.values())
-
-
-def find_book(isbn:str):
-
-    url = get_url(isbn)
+    url = get_url(isbn,key)
 
     data = get_info(url)
 
     info = extract_info(data)
 
     return info
+
+
+# result = find_book("9786254052033",key)
+# result = json.dumps(result,indent=5)
+# print(result)
 
