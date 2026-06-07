@@ -63,7 +63,7 @@ def extract_from_openLibary(info:dict):
 
     except: authorInfo = "Unknown"
 
-    extractedInfo = {
+    bookInfo = {
 
         "title":info["title"],
         "authors":authorInfo,
@@ -73,25 +73,55 @@ def extract_from_openLibary(info:dict):
         }
 
 
-    return extractedInfo
+    return bookInfo
+
+def extract_from_user():
+
+    bookInfo = {
+
+        "title":"",
+        "author":"", 
+        "publisher":"", 
+        "isbn":""
+    }
+
+    for i in bookInfo.keys():
+
+        info = input(f"{i}: ")
+
+        bookInfo[i] = info
+
+    return bookInfo
 
 
 
 def find_book(isbn:str,key=None):
 
-    url = get_url(isbn,key)
+    try:
 
-    data = get_info(url)
+        url = get_url(isbn,key)
 
-    if key:
+        data = get_info(url)
 
-        info = extract_from_googleBooks(data)
 
-    else:
+        if key:
 
-        info = extract_from_openLibary(data)
+            try:
+
+                info = extract_from_googleBooks(data)
+
+            except: 
+
+                info = extract_from_openLibary(data)
+                    
+        else:
+
+            info = extract_from_openLibary(data)
+
+    except: info = extract_from_user()
 
 
     return info
+
 
 
