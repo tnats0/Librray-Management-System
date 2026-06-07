@@ -2,4 +2,4 @@
 USE libraryDatabase;
 
 SELECT * FROM books;
-
+DELETE FROM books WHERE title = "Deniz Fenerinde Ögle Yemegi - Deniz Hikayeleri";
