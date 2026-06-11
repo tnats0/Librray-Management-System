@@ -2,6 +2,8 @@ import pyzbar as pzb
 import cv2 
 from matplotlib import pyplot as plt
 
+# TODO: This code is useless due to the poor quality of the capture device.
+
 captureDevice = cv2.VideoCapture(0) #? "0" is the device index.
 
 

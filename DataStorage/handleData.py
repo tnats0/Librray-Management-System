@@ -25,9 +25,11 @@ def append_book_data(bookData:dict):
 
     connect()
 
-    appendCommand = f"INSERT books VALUES('{bookData[0]}','{bookData[1]}','{bookData[2]}','{bookData[3]}');"
+    appendCommand = f"INSERT books VALUES('{bookData["title"]}','{bookData["author"]}','{bookData["publisher"]}','{bookData["isbn"]}');"
 
     cursor.execute(appendCommand)
+
+    disconnect()
 
 def display_book_table():
 
@@ -46,6 +48,8 @@ def display_book_table():
 
 
     return table
+
+    disconnect()
 
 
 
