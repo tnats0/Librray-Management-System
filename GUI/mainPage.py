@@ -25,9 +25,10 @@ class MainPage(CTk):
 
         self.place_main_page_widgets()
 
-        self.leftBar = attributesBar(self)
+        self.leftBar = attributesBar(self,0.35,1,"#0e0d0d")
 
-        self.leftBar.place(relwidth=0.25,relheight=1)
+        self.topBar = TopBar(self,1,0.05,"#5a4b47")
+
 
 
     def place_main_page_widgets(self):
@@ -35,19 +36,17 @@ class MainPage(CTk):
         self.appTitle = CTkLabel(self,text=" - Local Digital Library (L. D. L.) -")
         self.appTitle.grid(row=1,columnspan=4)
 
-        self.isbnEntry = CTkEntry(self,placeholder_text="Enter ISBN (13 digits)")
-        self.isbnEntry.grid(row=2,columnspan=4)
         
 
 
-class attributesBar(CTkFrame):
+class attributesBar(tgf.Frame):
 
-    def __init__(self,parent:CTk):
-        super().__init__(parent)
+    def __init__(self, parent, relwidth, relheight, fg_color,**kwargs):
+        super().__init__(parent, relwidth, relheight, fg_color,**kwargs)
 
-        self.configure(fg_color="#0e0f0f")
+        self.setup()
 
-        tgf.create_layout(self,3,3)
+        self.create_layout(3,3)
 
         self.create_attributesBar_widgets()
 
@@ -55,6 +54,15 @@ class attributesBar(CTkFrame):
     def create_attributesBar_widgets(self):
 
         self.addBookButton = CTkButton(self,text="Add a Book",width=100)
+        self.addBookButton.pack(side=BOTTOM)
 
-        self.addBookButton.pack(side=BOTTOM,pady=5)
-        
+        self.isbnEntry = CTkEntry(self,placeholder_text="Enter ISBN (13 digits)")
+        self.isbnEntry.pack(side=BOTTOM)
+
+
+class TopBar(tgf.Frame):
+
+    def __init__(self, parent, relwidth, relheight, fg_color,**kwargs):
+        super().__init__(parent, relwidth, relheight, fg_color,**kwargs)
+
+        self.setup()
