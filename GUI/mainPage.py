@@ -4,7 +4,7 @@ import tkinterGuiFunctions as tgf
 
 class MainPage(CTk):
 
-    def __init__(self,widht:int=500,height:int=500,title:str="Test",resizable:bool=True):
+    def __init__(self,widht:int=1920,height:int=1080,title:str="Test",resizable:bool=True):
         super().__init__()
 
         self.title(title)
@@ -23,44 +23,53 @@ class MainPage(CTk):
 
         tgf.create_layout(self,4,4)
 
-        self.place_main_page_widgets()
+        self.leftBar = libraryPanel(self,0.35,1,"#0e0d0d")
 
-        self.leftBar = attributesBar(self,0.35,1,"#0e0d0d")
-
-        self.topBar = TopBar(self,1,0.05,"#5a4b47")
-
-
-
-    def place_main_page_widgets(self):
-
-        self.appTitle = CTkLabel(self,text=" - Local Digital Library (L. D. L.) -")
-        self.appTitle.grid(row=1,columnspan=4)
+        self.topBar = ToolBar(self,1,0.05,"#5a4b47")
 
         
 
 
-class attributesBar(tgf.Frame):
+class libraryPanel(tgf.Frame):
 
     def __init__(self, parent, relwidth, relheight, fg_color,**kwargs):
         super().__init__(parent, relwidth, relheight, fg_color,**kwargs)
 
         self.setup()
 
-        self.create_layout(3,3)
+        self.bar = bookInsertionPanel(self,relwidth=1,relheight=0.1,fg_color="transparent")
 
-        self.create_attributesBar_widgets()
-
-
-    def create_attributesBar_widgets(self):
-
-        self.addBookButton = CTkButton(self,text="Add a Book",width=100)
-        self.addBookButton.pack(side=BOTTOM)
-
-        self.isbnEntry = CTkEntry(self,placeholder_text="Enter ISBN (13 digits)")
-        self.isbnEntry.pack(side=BOTTOM)
+        self.bar.pack(side=BOTTOM,fill=X)
 
 
-class TopBar(tgf.Frame):
+class bookInsertionPanel(tgf.Frame):
+
+    def __init__(self, parent,relwidth, relheight, fg_color, **kwargs):
+        super().__init__(parent,relwidth, relheight, fg_color, **kwargs)
+
+        self.create_layout(1,2)
+
+        self.create_book_insertion_panel_widgets()
+        self.place_book_insertion_panel_widgets()    
+
+
+    def create_book_insertion_panel_widgets(self):
+
+        self.isbnEntry = CTkEntry(self,placeholder_text="Enter ISBN (13 digits)",width=300,)
+
+        self.addBookButton = CTkButton(self,text="Add a Book",width=75)
+
+        self.scanBarcodeButon = CTkButton(self,text="Scan Book",width=75)
+
+    def place_book_insertion_panel_widgets(self):
+
+        self.isbnEntry.pack(side=LEFT,fill=X,expand=True)
+
+        self.addBookButton.pack(side=LEFT,fill=X,expand=True)
+
+        self.scanBarcodeButon.pack(side=LEFT,fill=X,expand=True)
+
+class ToolBar(tgf.Frame):
 
     def __init__(self, parent, relwidth, relheight, fg_color,**kwargs):
         super().__init__(parent, relwidth, relheight, fg_color,**kwargs)
