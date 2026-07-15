@@ -2,13 +2,14 @@ from requests import *
 import json
 import dotenv as denv
 import os
+import asyncio as aio
 
 denv.load_dotenv(".env")
 
 key = os.getenv("api_key")
 
 
-def get_url(isbn:str,key=None):
+def set_url(isbn:str,key=None):
 
     if key:
 
@@ -21,34 +22,44 @@ def get_url(isbn:str,key=None):
     return url
 
 
-def get_info(url:str):
+def get_info(url):
     
     data = get(url,"title")
-
     info = data.json()
 
     return info 
 
-
+    
 def extract_from_googleBooks(info:dict): 
+
+    print("By GoogleBooks")
     
     extractedInfo = info["items"][0]["volumeInfo"]
 
-    try:
-        publisher = extractedInfo["publisher"]
-    except:
-        publisher = "Unknown"
+    publisher = extractedInfo["publisher"]
 
     bookInfo = {
 
         "title": extractedInfo["title"],
-        "author": extractedInfo["authors"][0],
+        "authors": extractedInfo["authors"][0],
         "publisher": publisher,
         "isbn": extractedInfo["industryIdentifiers"][1]["identifier"]
 
     }
 
     return bookInfo
+
+def get_from_googleBooks(isbn:str,key:str=None):
+
+    url = f"https://www.googleapis.com/books/v1/volumes?q=isbn:{isbn}&key={key}" 
+
+    info = get_info(url)
+
+    result = extract_from_googleBooks(info)
+
+    return result
+
+
 
 def extract_from_openLibary(info:dict):
 
@@ -58,10 +69,13 @@ def extract_from_openLibary(info:dict):
 
     authorURL = f"https://openlibrary.org/{authorKey}.json"
 
+    print(authorURL)
+
     try:
         authorInfo = get_info(authorURL)["personal_name"]
 
-    except: authorInfo = "Unknown"
+    except: 
+        authorInfo = "Unknown"        
 
     bookInfo = {
 
@@ -74,6 +88,20 @@ def extract_from_openLibary(info:dict):
 
 
     return bookInfo
+
+
+
+def get_from_openLibrary(isbn:str):
+
+    url = f"https://openlibrary.org/isbn/{isbn}.json"
+
+    info = get_info(url)
+
+    result = extract_from_openLibary(info)
+
+    return result
+
+
 
 def extract_from_user():
 
@@ -99,29 +127,17 @@ def find_book(isbn:str,key=None):
 
     try:
 
-        url = get_url(isbn,key)
+        result = get_from_googleBooks(isbn,key)
 
-        data = get_info(url)
+    except:
 
+        result = get_from_openLibrary(isbn)
 
-        if key:
+    else:
 
-            try:
+        raise Exception("Kitap bulunamadı :(")
 
-                info = extract_from_googleBooks(data)
-
-            except: 
-
-                info = extract_from_openLibary(data)
-                    
-        else:
-
-            info = extract_from_openLibary(data)
-
-    except: info = extract_from_user()
-
-
-    return info
+    return result
 
 
 

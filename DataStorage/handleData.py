@@ -25,7 +25,7 @@ def append_book_data(bookData:dict):
 
     connect()
 
-    appendCommand = f"INSERT books VALUES('{bookData["title"]}','{bookData["author"]}','{bookData["publisher"]}','{bookData["isbn"]}');"
+    appendCommand = f"INSERT books VALUES('{bookData["title"]}','{bookData["authors"]}','{bookData["publishers"]}','{bookData["isbn"]}');"
 
     cursor.execute(appendCommand)
 
