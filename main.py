@@ -21,17 +21,6 @@ def menu(isbn):
     except: print("Already in Library")
 
 
-def test():
-
-    with open("isbnCodes.txt","r") as file:
-
-        codes = file.readlines()
-
-        for code in codes:
-            print(code,end="")
-            menu(code)
 
 
-    display_book_table()
-
-test()
+display_book_table()
