@@ -4,36 +4,34 @@ import os
 
 denv.load_dotenv(".env")
 
+user=os.getenv("DBUserName")
+password=os.getenv("DBPassword")
+database=os.getenv("DBName")
+
 def connect():
+    return sql.connect(host="127.0.0.1",username=user,password=password,database=database)
 
-    user=os.getenv("DBUserName")
-    password=os.getenv("DBPassword")
-    database=os.getenv("DBName")
 
-    global connection 
-    connection = sql.connect(host="127.0.0.1",user=user,password=password,database=database,autocommit=True)
 
-    global cursor 
-    cursor = connection.cursor()
-
-def disconnect():
-    cursor.close()
-    connection.close()
-    
 
 def append_book_data(bookData:dict):
 
-    connect()
+    connection = connect()
+    cursor = connection.cursor()
 
     appendCommand = f"INSERT books VALUES('{bookData["title"]}','{bookData["author"]}','{bookData["publisher"]}','{bookData["isbn"]}');"
 
     cursor.execute(appendCommand)
+    connection.commit()
 
-    disconnect()
+    cursor.close()
+    connection.close()
+
 
 def display_book_table():
 
-    connect()
+    connection = connect()
+    cursor = connection.cursor()
 
     displayCommand = "SELECT * from books;"
 
@@ -41,15 +39,18 @@ def display_book_table():
 
     table = []
 
-    for i,data in enumerate(cursor):
+    for data in cursor:
 
-        print(f"> {i}. - {data}")
-        table.append(data)
+        book = {"title":data[0],"author":data[1],"publisher":data[2],"isbn":data[3]}
 
+        table.append(book)
+
+    cursor.close()
+    connection.close()
 
     return table
 
-    disconnect()
+
 
 
 

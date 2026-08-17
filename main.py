@@ -23,15 +23,6 @@ def menu(isbn):
 
 def test():
 
-    with open("isbnCodes.txt","r") as file:
-
-        codes = file.readlines()
-
-        for code in codes:
-            print(code,end="")
-            menu(code)
-
-
-    display_book_table()
+    print(display_book_table())
 
 test()
