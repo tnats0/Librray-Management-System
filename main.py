@@ -23,6 +23,7 @@ def menu(isbn):
 
 def test():
 
-    print(display_book_table())
+    print(turn_into_book(get_book("Metro 2033")[0]))
 
 test()
+
