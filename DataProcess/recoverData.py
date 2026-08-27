@@ -7,32 +7,46 @@ denv.load_dotenv(".env")
 
 key = os.getenv("api_key")
 
+BASE_URL = "https://www.googleapis.com/books/v1/volumes"
+
 
 def get_url(isbn:str,key=None):
 
-    if key:
-
-        url = f"https://www.googleapis.com/books/v1/volumes?q=isbn:{isbn}&key={key}" 
-
-    else:
-
-        url = f"https://openlibrary.org/isbn/{isbn}.json"
+    url = f"https://www.googleapis.com/books/v1/volumes?q=isbn:{isbn}&key={key}"
 
     return url
 
+def get_volume_url(volumeId:str,key=None):
+
+    url = f"https://www.googleapis.com/books/v1/volumes/{volumeId}?key={key}"
+
+    return url
 
 def get_info(url:str):
+
+    data = Session().get(url).json()
+
+    return data
+
+
+def get_volumeId(url:str):
     
-    data = get(url,"title")
+    data = Session().get(url).json()
 
-    info = data.json()
+    print(data)
 
-    return info 
+    volumeId = data["items"][0]["id"]
+
+    print(volumeId)
+
+    return volumeId
 
 
 def extract_from_googleBooks(info:dict): 
+
+    print("Extracting...")
     
-    extractedInfo = info["items"][0]["volumeInfo"]
+    extractedInfo = info["volumeInfo"]
 
     try:
         publisher = extractedInfo["publisher"]
@@ -50,76 +64,25 @@ def extract_from_googleBooks(info:dict):
 
     return bookInfo
 
-def extract_from_openLibary(info:dict):
-
-    print("By OpenLibrary")
-
-    authorKey = info["authors"][0]["key"]
-
-    authorURL = f"https://openlibrary.org/{authorKey}.json"
-
-    try:
-        authorInfo = get_info(authorURL)["personal_name"]
-
-    except: authorInfo = "Unknown"
-
-    bookInfo = {
-
-        "title":info["title"],
-        "authors":authorInfo,
-        "publishers":info["publishers"][0],
-        "isbn":info["isbn_13"][0]
-        
-        }
-
-
-    return bookInfo
-
-def extract_from_user():
-
-    bookInfo = {
-
-        "title":"",
-        "author":"", 
-        "publisher":"", 
-        "isbn":""
-    }
-
-    for i in bookInfo.keys():
-
-        info = input(f"{i}: ")
-
-        bookInfo[i] = info
-
-    return bookInfo
-
 
 
 def find_book(isbn:str,key=None):
 
-    try:
+    url = get_url(isbn,key)
 
-        url = get_url(isbn,key)
+    print(url)
 
-        data = get_info(url)
+    vid = get_volumeId(url)
 
+    vurl = get_volume_url(vid,key)
 
-        if key:
+    print(vurl)
 
-            try:
+    data = get_info(vurl)
 
-                info = extract_from_googleBooks(data)
+    print(data)
 
-            except: 
-
-                info = extract_from_openLibary(data)
-                    
-        else:
-
-            info = extract_from_openLibary(data)
-
-    except: info = extract_from_user()
-
+    info = extract_from_googleBooks(data)
 
     return info
 

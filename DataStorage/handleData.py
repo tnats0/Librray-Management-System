@@ -67,10 +67,3 @@ def turn_into_book(book_data:tuple):
 
     return book
 
-
-
-
-
-
-
-
