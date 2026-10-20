@@ -1,95 +1,74 @@
 from requests import *
-import json
-import dotenv as denv
-import os
-
-denv.load_dotenv(".env")
-
-key = os.getenv("api_key")
+import time
 
 
-def get_url(isbn:str,key=None):
+def get_volumeId(isbn:str,key=None):
 
-    if key:
+    url = f"https://www.googleapis.com/books/v1/volumes?q=isbn:{isbn}&key={key}"
 
-        url = f"https://www.googleapis.com/books/v1/volumes?q=isbn:{isbn}&key={key}" 
+    req = Session().get(url)
 
-    else:
+    status = req.status_code
 
-        url = f"https://openlibrary.org/isbn/{isbn}.json"
+    print(f"Status Code: {status}")
 
-    return url
+    if status == 503:
+        return status
+
+    data = req.json()
+
+    print(f"Sonuç : {data}")
 
 
-def get_info(url:str):
+    volumeId = data["items"][0]["id"]
+
+
+    return volumeId
+
+def get_data(volumeId:str,key=None):
+
+    volume_url = f"https://www.googleapis.com/books/v1/volumes/{volumeId}?key={key}"
+
+    req = Session().get(volume_url)
+
+    status = req.status_code
+
+    print(f"Status Code: {status}")
+
+    if status == 503:
+        return status
+
+    data = req.json()
+
+    print(f"Sonuç : {data}")
+
+
+    return data
+
+
+def extract_data(info:dict): 
+
+    print("Extracting...")
     
-    data = get(url,"title")
-
-    info = data.json()
-
-    return info 
-
-
-def extract_from_googleBooks(info:dict): 
-    
-    extractedInfo = info["items"][0]["volumeInfo"]
+    extractedInfo = info["volumeInfo"]
 
     try:
-        publisher = extractedInfo["publisher"]
+        title = extractedInfo["title"] if extractedInfo["title"] else "Unknown" 
+        authors = extractedInfo["authors"][0] if extractedInfo["authors"][0] else "Unknown"
+        publisher = extractedInfo["publisher"] if extractedInfo["publisher"] else "Unknown"
+        
+
     except:
-        publisher = "Unknown"
+        authors = "Unknown"
 
     bookInfo = {
 
         "title": extractedInfo["title"],
-        "author": extractedInfo["authors"][0],
-        "publisher": publisher,
+        "author": authors,
+        "publisher": extractedInfo["publisher"],
         "isbn": extractedInfo["industryIdentifiers"][1]["identifier"]
 
     }
-
-    return bookInfo
-
-def extract_from_openLibary(info:dict):
-
-    print("By OpenLibrary")
-
-    authorKey = info["authors"][0]["key"]
-
-    authorURL = f"https://openlibrary.org/{authorKey}.json"
-
-    try:
-        authorInfo = get_info(authorURL)["personal_name"]
-
-    except: authorInfo = "Unknown"
-
-    bookInfo = {
-
-        "title":info["title"],
-        "authors":authorInfo,
-        "publishers":info["publishers"][0],
-        "isbn":info["isbn_13"][0]
-        
-        }
-
-
-    return bookInfo
-
-def extract_from_user():
-
-    bookInfo = {
-
-        "title":"",
-        "author":"", 
-        "publisher":"", 
-        "isbn":""
-    }
-
-    for i in bookInfo.keys():
-
-        info = input(f"{i}: ")
-
-        bookInfo[i] = info
 
     return bookInfo
 
@@ -97,31 +76,22 @@ def extract_from_user():
 
 def find_book(isbn:str,key=None):
 
-    try:
+    volumeId = get_volumeId(isbn,key)
 
-        url = get_url(isbn,key)
+    if volumeId == 503:
+        return volumeId
 
-        data = get_info(url)
+    time.sleep(5)
 
+    data = get_data(volumeId,key)
 
-        if key:
+    if data == 503:
+        return data
 
-            try:
+    print("Search Succeded!")
 
-                info = extract_from_googleBooks(data)
+    info = extract_data(data)
 
-            except: 
-
-                info = extract_from_openLibary(data)
-                    
-        else:
-
-            info = extract_from_openLibary(data)
-
-    except: info = extract_from_user()
-
-
+    print("Extraction Succeded!")
+    
     return info
-
-
-
