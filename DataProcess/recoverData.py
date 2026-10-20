@@ -1,63 +1,71 @@
 from requests import *
-import json
-import dotenv as denv
-import os
-
-denv.load_dotenv(".env")
-
-key = os.getenv("api_key")
-
-BASE_URL = "https://www.googleapis.com/books/v1/volumes"
+import time
 
 
-def get_url(isbn:str,key=None):
+def get_volumeId(isbn:str,key=None):
 
     url = f"https://www.googleapis.com/books/v1/volumes?q=isbn:{isbn}&key={key}"
 
-    return url
+    req = Session().get(url)
 
-def get_volume_url(volumeId:str,key=None):
+    status = req.status_code
 
-    url = f"https://www.googleapis.com/books/v1/volumes/{volumeId}?key={key}"
+    print(f"Status Code: {status}")
 
-    return url
+    if status == 503:
+        return status
 
-def get_info(url:str):
+    data = req.json()
 
-    data = Session().get(url).json()
+    print(f"Sonuç : {data}")
+
+
+    volumeId = data["items"][0]["id"]
+
+
+    return volumeId
+
+def get_data(volumeId:str,key=None):
+
+    volume_url = f"https://www.googleapis.com/books/v1/volumes/{volumeId}?key={key}"
+
+    req = Session().get(volume_url)
+
+    status = req.status_code
+
+    print(f"Status Code: {status}")
+
+    if status == 503:
+        return status
+
+    data = req.json()
+
+    print(f"Sonuç : {data}")
+
 
     return data
 
 
-def get_volumeId(url:str):
-    
-    data = Session().get(url).json()
-
-    print(data)
-
-    volumeId = data["items"][0]["id"]
-
-    print(volumeId)
-
-    return volumeId
-
-
-def extract_from_googleBooks(info:dict): 
+def extract_data(info:dict): 
 
     print("Extracting...")
     
     extractedInfo = info["volumeInfo"]
 
     try:
-        publisher = extractedInfo["publisher"]
+        title = extractedInfo["title"] if extractedInfo["title"] else "Unknown" 
+        authors = extractedInfo["authors"][0] if extractedInfo["authors"][0] else "Unknown"
+        publisher = extractedInfo["publisher"] if extractedInfo["publisher"] else "Unknown"
+        
+
     except:
-        publisher = "Unknown"
+        authors = "Unknown"
 
     bookInfo = {
 
         "title": extractedInfo["title"],
-        "author": extractedInfo["authors"][0],
-        "publisher": publisher,
+        "author": authors,
+        "publisher": extractedInfo["publisher"],
         "isbn": extractedInfo["industryIdentifiers"][1]["identifier"]
 
     }
@@ -68,23 +76,22 @@ def extract_from_googleBooks(info:dict):
 
 def find_book(isbn:str,key=None):
 
-    url = get_url(isbn,key)
+    volumeId = get_volumeId(isbn,key)
 
-    print(url)
+    if volumeId == 503:
+        return volumeId
 
-    vid = get_volumeId(url)
+    time.sleep(5)
 
-    vurl = get_volume_url(vid,key)
+    data = get_data(volumeId,key)
 
-    print(vurl)
+    if data == 503:
+        return data
 
-    data = get_info(vurl)
+    print("Search Succeded!")
 
-    print(data)
+    info = extract_data(data)
 
-    info = extract_from_googleBooks(data)
-
+    print("Extraction Succeded!")
+    
     return info
-
-
-

@@ -7,45 +7,50 @@ import random
 import dotenv
 import os
 
-dotenv.load_dotenv(".env")
+dotenv.load_dotenv(".env",override=True)
 
 API_KEY = os.getenv("API_KEY")
 
-def loop():
+def add(code):
+    
+    if check_data(code):
+                
+        print("Book is already in library")
 
-    with open("C:\\Users\\TARIK ATASOY\\projects\\helloworld\\Projects\\Library_Management_System\\codes.txt","r",encoding="utf-8") as file:
+    else:
+        print("Book not found. Searching...")
 
-        codes = file.read().split("\n")
+        result = find_book(code,API_KEY)
 
-        codes.pop()
-
-        print(codes)
-
-        for code in codes:
-
-            print(f"Searching {code} ...")
+        while result == 503:
 
             result = find_book(code,API_KEY)
+            time.sleep(random.randint(1,5))
+            print("Requesting again")
 
-            try:
+
+        try:
+
+                print("Inserting the book to the database...")
 
                 append_book_data(result)
 
-            except:
+                print("Book has successfuly inserted!")
 
-                print("---")
+        except:
 
-            time.sleep(random.randint(1,5))
-            
+                print(f"Operation failed :( : {result}")
+
+                time.sleep(random.randint(1,5))
+
+
+
+def menu():
+     
+     code = input("ISBN: ")
+
+     add(code)
 
 
 
 display()
-
-isbn = "9786053607021"
-
-# result = find_book(isbn,API_KEY)
-
-# print(result)
-
-# append_book_data(result)

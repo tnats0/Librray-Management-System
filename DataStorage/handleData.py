@@ -18,9 +18,11 @@ def append_book_data(bookData:dict):
     connection = connect()
     cursor = connection.cursor()
 
-    appendCommand = f"INSERT books VALUES('{bookData["title"]}','{bookData["author"]}','{bookData["publisher"]}','{bookData["isbn"]}');"
+    appendCommand = f"INSERT books VALUES($1,$2,$3,$4);"
+    values = [bookData["title"],bookData["author"],bookData["publisher"],bookData["isbn"]]
 
-    cursor.execute(appendCommand)
+
+    cursor.execute(appendCommand,values)
     connection.commit()
 
     cursor.close()
@@ -49,9 +51,9 @@ def get_book(title):
     connection = connect()
     cursor = connection.cursor()
 
-    command = f"SELECT * FROM books WHERE title = '{title}';"
+    command = f"SELECT * FROM books WHERE title = $1;"
 
-    cursor.execute(command)
+    cursor.execute(command,[title])
 
     book = cursor.fetchall()
 
@@ -66,4 +68,18 @@ def turn_into_book(book_data:tuple):
     book = Book(book_data[0],book_data[1],book_data[2],book_data[3])
 
     return book
+
+def check_data(isbn):
+
+    connection = connect()
+    cusror = connection.cursor()
+
+    command = f"SELECT * FROM books WHERE isbn = $1 LIMIT 1"
+    
+    cusror.execute(command,[isbn])
+
+    isAvaliable = cusror.fetchall()
+
+    return 1 if isAvaliable else 0
+
 

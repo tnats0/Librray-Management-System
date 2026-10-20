@@ -2,7 +2,7 @@ import pyzbar as pzb
 import cv2 
 from matplotlib import pyplot as plt
 
-# TODO: This code is useless due to the poor quality of the capture device.
+# TODO: This code is currently not useful due to the poor quality of the capture device.
 
 captureDevice = cv2.VideoCapture(0) #? "0" is the device index.
 
@@ -17,7 +17,7 @@ def take_photo(photoName:str):
     cv2.imwrite(photoName+".jpeg",frame_rgb)
 
 
-take_photo("test")
+# take_photo("test")
 
 
 captureDevice.release() #? It turns off the capture device.
