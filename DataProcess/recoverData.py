@@ -63,9 +63,9 @@ def extract_data(info:dict):
 
     bookInfo = {
 
-        "title": extractedInfo["title"],
+        "title": title,
         "author": authors,
-        "publisher": extractedInfo["publisher"],
+        "publisher": publisher,
         "isbn": extractedInfo["industryIdentifiers"][1]["identifier"]
 
     }

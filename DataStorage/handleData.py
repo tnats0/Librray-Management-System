@@ -3,65 +3,48 @@ import dotenv as denv
 import os
 from bookClass import Book
 
-denv.load_dotenv(".env")
+from database.pool import get_cursor
 
-user=os.getenv("DBUserName")
-password=os.getenv("DBPassword")
-database=os.getenv("DBName")
-
-def connect():
-    return sql.connect(host="127.0.0.1",username=user,password=password,database=database)
 
 
 def append_book_data(bookData:dict):
 
-    connection = connect()
-    cursor = connection.cursor()
 
     appendCommand = "INSERT books VALUES(%s,%s,%s,%s);"
+
     values = [bookData["title"],bookData["author"],bookData["publisher"],bookData["isbn"]]
 
+    with get_cursor() as cur:
 
-    cursor.execute(appendCommand,values)
-    connection.commit()
+        cur.execute(appendCommand,values)
 
-    cursor.close()
-    connection.close()
 
 
 def display_book_table():
 
-    connection = connect()
-    cursor = connection.cursor()
-
     displayCommand = "SELECT * from books;"
 
-    cursor.execute(displayCommand)
+    with get_cursor() as cursor:
 
-    data = cursor.fetchall()
+        cursor.execute(displayCommand)
 
-    cursor.close()
-    connection.close()
+    return cursor.fetchall() 
 
-    return data 
+
 
 
 def get_book(title):
 
-    connection = connect()
-    cursor = connection.cursor()
 
     command = "SELECT * FROM books WHERE title = %s;"
 
-    cursor.execute(command,[title])
+    with get_cursor() as cur:
 
-    book = cursor.fetchall()
+        cur.execute(command,[title])
 
-    cursor.close()
-    connection.close()
+        return cur.fetchall()
+
     
-    return book
-
 
 def turn_into_book(book_data:tuple):
 
@@ -71,17 +54,13 @@ def turn_into_book(book_data:tuple):
 
 def check_data(isbn):
 
-    connection = connect()
-    cursor = connection.cursor()
-
     command = "SELECT * FROM books WHERE isbn = %s LIMIT 1"
     
-    cursor.execute(command,[isbn])
+    with get_cursor as cur:
 
-    isAvaliable = cursor.fetchall()
+        cur.execute(command,[isbn])
 
-    cursor.close()
-    connection.close()
+        isAvaliable = cur.fetchall()
 
     return 1 if isAvaliable else 0
 

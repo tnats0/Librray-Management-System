@@ -52,6 +52,6 @@ def menu():
 
      add(code)
 
+book = get_book("1984")
 
-
-display()
+print(book)
