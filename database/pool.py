@@ -4,7 +4,7 @@ from contextlib import contextmanager
 import dotenv
 from mysql.connector import pooling, Error
 
-dotenv.load_dotenv(".env")
+dotenv.load_dotenv(".env",override=True)
 
 
 def _need(name: str) -> str:
@@ -28,7 +28,7 @@ _pool = pooling.MySQLConnectionPool(
 
 
 @contextmanager
-def get_cursor(commit: bool = False):
+def get_cursor(commit: bool = True):
     connection = _pool.get_connection()
     cursor = connection.cursor(buffered=True)
     try:

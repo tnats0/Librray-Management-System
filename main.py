@@ -28,7 +28,6 @@ def add(code):
             time.sleep(random.randint(1,5))
             print("Requesting again")
 
-        isbn = input("ISBN: ")
 
         try:
 
@@ -52,6 +51,4 @@ def menu():
 
      add(code)
 
-book = get_book("1984")
-
-print(book)
+menu()

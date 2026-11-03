@@ -7,9 +7,9 @@ from bookClass import *
 console = Console()
 
 
-def display():
+def display(shelf:Shelf):
 
-    books = display_book_table()
+    books = shelf.books
 
     totalBooks = len(books)
 
@@ -21,20 +21,14 @@ def display():
     table.add_column("Publishers")
     table.add_column("ISBN")
 
-
-    for i in range(len(books)):
-
-        books[i] = turn_into_book(books[i])
-
     for i,book in enumerate(books):
 
-        print(book.isbn)
         table.add_row(str(i+1),book.title,book.author,book.publisher,book.isbn)
 
     console.print(table)
     
 
-    
+
 
 
         

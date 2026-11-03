@@ -12,9 +12,9 @@ def append_book_data(bookData:dict):
 
     appendCommand = "INSERT books VALUES(%s,%s,%s,%s);"
 
-    values = [bookData["title"],bookData["author"],bookData["publisher"],bookData["isbn"]]
+    values = [bookData["isbn"],bookData["title"],bookData["author"],bookData["publisher"]]
 
-    with get_cursor() as cur:
+    with get_cursor(commit=True) as cur:
 
         cur.execute(appendCommand,values)
 
@@ -56,7 +56,7 @@ def check_data(isbn):
 
     command = "SELECT * FROM books WHERE isbn = %s LIMIT 1"
     
-    with get_cursor as cur:
+    with get_cursor() as cur:
 
         cur.execute(command,[isbn])
 
