@@ -52,14 +52,31 @@ def extract_data(info:dict):
     
     extractedInfo = info["volumeInfo"]
 
+    title,authors,publisher = "","",""
+
     try:
         title = extractedInfo["title"] if extractedInfo["title"] else "Unknown" 
         authors = extractedInfo["authors"][0] if extractedInfo["authors"][0] else "Unknown"
         publisher = extractedInfo["publisher"] if extractedInfo["publisher"] else "Unknown"
-        
 
-    except:
-        authors = "Unknown"
+    except KeyError as err:
+
+            match err.args[0]:
+
+                case "title":
+                     title = "Unknown"
+
+
+                case "authors":
+                     authors = "Unknown" 
+
+                case "publisher":            
+                      publisher = "Unknown"
+
+                case _:
+                      title,authors,publisher = "Unknown","Unknown","Unknown"
+                      
+
 
     bookInfo = {
 

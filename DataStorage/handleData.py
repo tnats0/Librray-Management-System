@@ -1,7 +1,7 @@
 import mysql.connector as sql
 import dotenv as denv
 import os
-from bookClass import Book
+from bookClass import Book,Shelf
 
 from database.pool import get_cursor
 
@@ -18,39 +18,56 @@ def append_book_data(bookData:dict):
 
         cur.execute(appendCommand,values)
 
+def turn_into_shelf(name,books:tuple):
 
+    books = list(books)
 
-def display_book_table():
+    shelf = Shelf(name,books)
 
-    displayCommand = "SELECT * from books;"
+    return shelf
+
+def get_shelf_data(shelf_name="books"):
+
+    displayCommand = "SELECT * from %s;"
 
     with get_cursor() as cursor:
 
-        cursor.execute(displayCommand)
+        cursor.execute(displayCommand,[shelf_name])
 
-    return cursor.fetchall() 
+    return list(cursor.fetchall()) 
+
+def get_shelf(shelf_name="books")->Shelf:
+
+    shelf_data = get_shelf_data(shelf_name)
+
+    shelf = turn_into_shelf(shelf_name,shelf_data)
+
+    return shelf
 
 
 
+def get_book(title,shelf="books"):
 
-def get_book(title):
 
-
-    command = "SELECT * FROM books WHERE title = %s;"
+    command = "SELECT * FROM %s WHERE title = %s;"
 
     with get_cursor() as cur:
 
-        cur.execute(command,[title])
+        cur.execute(command,[shelf,title])
 
         return cur.fetchall()
 
-    
+
+
 
 def turn_into_book(book_data:tuple):
 
     book = Book(book_data[0],book_data[1],book_data[2],book_data[3])
 
     return book
+
+
+
 
 def check_data(isbn):
 

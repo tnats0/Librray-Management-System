@@ -1,11 +1,13 @@
 import os
 from contextlib import contextmanager
+from pathlib import Path
 
 import dotenv
 from mysql.connector import pooling, Error
 
-dotenv.load_dotenv(".env",override=True)
+ENV_FILE_PATH = Path(__file__).resolve().parent.parent / ".env"
 
+dotenv.load_dotenv(ENV_FILE_PATH,override=True)
 
 def _need(name: str) -> str:
     value = os.getenv(name)
