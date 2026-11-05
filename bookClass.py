@@ -19,7 +19,14 @@ class Book:
 
     def __repr__(self):
 
-        return f"{self.title} {self.author} {self.publisher} {self.isbn}"
+        bookDict = {
+            "isbn":self.isbn,
+            "title":self.title,
+            "authors":self.author,
+            "publishers":self.publisher
+        }
+
+        return bookDict 
 
 
 class Shelf:

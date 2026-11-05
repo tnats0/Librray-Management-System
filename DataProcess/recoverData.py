@@ -46,7 +46,7 @@ def get_data(volumeId:str,key=None):
     return data
 
 
-def extract_data(info:dict): 
+def extract_data(info:dict,isbn:str): 
 
     print("Extracting...")
     
@@ -54,38 +54,44 @@ def extract_data(info:dict):
 
     title,authors,publisher = "","",""
 
-    try:
-        title = extractedInfo["title"] if extractedInfo["title"] else "Unknown" 
-        authors = extractedInfo["authors"][0] if extractedInfo["authors"][0] else "Unknown"
-        publisher = extractedInfo["publisher"] if extractedInfo["publisher"] else "Unknown"
-
-    except KeyError as err:
-
-            match err.args[0]:
-
-                case "title":
-                     title = "Unknown"
-
-
-                case "authors":
-                     authors = "Unknown" 
-
-                case "publisher":            
-                      publisher = "Unknown"
-
-                case _:
-                      title,authors,publisher = "Unknown","Unknown","Unknown"
-                      
-
-
     bookInfo = {
 
-        "title": title,
-        "author": authors,
-        "publisher": publisher,
-        "isbn": extractedInfo["industryIdentifiers"][1]["identifier"]
+        "title": "Unknown",
+        "authors": "Unknown",
+        "publisher": "Unknown",
+        "isbn": isbn
 
     }
+
+    try:
+
+        title = extractedInfo["title"]
+        bookInfo["title"] = title
+
+    except KeyError:
+
+        pass
+    
+    try:
+
+        authors = extractedInfo["authors"][0]
+        bookInfo["authors"] = authors
+
+    except KeyError:
+
+        pass
+
+
+    try:
+
+        publisher = extractedInfo["publisher"]
+        bookInfo["publisher"] = publisher
+
+    except KeyError:
+
+        pass
+
+    
 
     return bookInfo
 
@@ -107,7 +113,7 @@ def find_book(isbn:str,key=None):
 
     print("Search Succeded!")
 
-    info = extract_data(data)
+    info = extract_data(data,isbn)
 
     print("Extraction Succeded!")
     

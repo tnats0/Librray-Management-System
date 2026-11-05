@@ -51,4 +51,6 @@ def menu():
 
      add(code)
 
-menu()
+book = turn_into_book(get_book("Devlet")).__repr__()
+
+append_book_data(book,"favorites")

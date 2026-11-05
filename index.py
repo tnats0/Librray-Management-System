@@ -7,7 +7,7 @@ app = fastapi.FastAPI()
 @app.get("/books")
 async def show_books():
 
-    result = display_book_table()
+    result = get_shelf_data()
 
     return result
 
