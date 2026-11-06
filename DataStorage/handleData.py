@@ -6,10 +6,10 @@ from bookClass import Book,Shelf
 from database.pool import get_cursor
 
 
-def append_book_data(bookData:dict,location="books"):
+def append_book_data(bookData:dict):
 
 
-    appendCommand = f"INSERT INTO {location} VALUES(%s,%s,%s,%s);"
+    appendCommand = "INSERT INTO books VALUES(%s,%s,%s,%s);"
 
     values = [bookData["isbn"],bookData["title"],bookData["authors"],bookData["publisher"]]
 
@@ -26,30 +26,12 @@ def turn_into_shelf(name,books:tuple):
 
     return shelf
 
-def get_shelf_data(shelf_name="books"):
-
-    displayCommand = f"SELECT * from {shelf_name};"
-
-    with get_cursor() as cursor:
-
-        cursor.execute(displayCommand)
-
-        return list(cursor.fetchall()) 
-
-def get_shelf(shelf_name="books")->Shelf:
-
-    shelf_data = get_shelf_data(shelf_name)
-
-    shelf = turn_into_shelf(shelf_name,shelf_data)
-
-    return shelf
 
 
+def get_book(title):
 
-def get_book(title,shelf="books"):
 
-
-    command = f"SELECT * FROM {shelf} WHERE title = %s LIMIT 1;"
+    command = "SELECT * FROM books WHERE title = %s LIMIT 1;"
 
     with get_cursor() as cur:
 
