@@ -1,0 +1,9 @@
+BEGIN;
+
+SELECT * FROM books;
+
+DELETE FROM books WHERE title LIKE "%unk%";
+
+ROLLBACK;
+
+COMMIT;
