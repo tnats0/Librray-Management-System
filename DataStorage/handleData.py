@@ -6,10 +6,10 @@ from bookClass import Book,Shelf
 from database.pool import get_cursor
 
 
-def append_book_data(bookData:dict):
+def add_book(bookData:dict):
 
 
-    appendCommand = "INSERT INTO books VALUES(%s,%s,%s,%s);"
+    appendCommand = "INSERT INTO books (isbn,title,authors,publisher) VALUES (%s,%s,%s,%s);"
 
     values = [bookData["isbn"],bookData["title"],bookData["authors"],bookData["publisher"]]
 

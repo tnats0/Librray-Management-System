@@ -1,18 +1,24 @@
 import database.pool as pool
 import bookClass as bcs
-import handleData as hd
-import mysql.connector as sql
-import dotenv as denv
-import os
+import DataStorage.handleData as hd
 
 
 def create_shelf(shelf_name:str):
 
-    pass
+    command = "INSERT INTO shelves (shelf_name) VALUES (%s);"
+
+    with pool.get_cursor() as cur:
+
+        cur.execute(command,[shelf_name])
 
 
-def add_book_to_shelf(book_title:str):
-    pass
+def add_book_to_shelf(isbn:str):
+
+    command = "INSERT INTO shelf_books (isbn) VALUES (%s);"
+
+    with pool.get_cursor() as cur:
+
+        cur.execute(command,[isbn])
 
 
 def delete_shelf(shelf_name:str):

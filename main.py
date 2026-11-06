@@ -1,4 +1,5 @@
 from DataStorage.handleData import *
+from DataStorage.shelves import *
 from DataProcess.recoverData import *
 from UI.terminal import *
 import time
@@ -33,13 +34,14 @@ def add(code):
 
                 print("Inserting the book to the database...")
 
-                append_book_data(result)
+                add_book(result)
 
                 print("Book has successfuly inserted!")
 
-        except:
+        except Exception as err :
 
                 print(f"Operation failed :( : {result}")
+                print(f"An error occured : {err}")
 
                 time.sleep(random.randint(1,5))
 
@@ -50,12 +52,8 @@ def menu():
 
      add(code)
 
-book_data = get_book("Devlet")
 
-print(book_data)
+book_isbn = get_book("Donusum")[0]
 
-book = turn_into_book(book_data).__repr__()
+add_book_to_shelf(book_isbn)
 
-print(book)
-
-append_book_data(book,"favorites")
