@@ -44,13 +44,18 @@ def add(code):
                 time.sleep(random.randint(1,5))
 
 
-
 def menu():
      
      code = input("ISBN: ")
 
      add(code)
 
-book = turn_into_book(get_book("Devlet")).__repr__()
+book_data = get_book("Devlet")
+
+print(book_data)
+
+book = turn_into_book(book_data).__repr__()
+
+print(book)
 
 append_book_data(book,"favorites")

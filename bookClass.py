@@ -2,7 +2,7 @@ import DataStorage.handleData as hData
 
 class Book:
 
-    def __init__(self,title,author,publisher,isbn):
+    def __init__(self,isbn,title,author,publisher):
         self.title = title
         self.author = author
         self.publisher = publisher
@@ -23,7 +23,7 @@ class Book:
             "isbn":self.isbn,
             "title":self.title,
             "authors":self.author,
-            "publishers":self.publisher
+            "publisher":self.publisher
         }
 
         return bookDict 

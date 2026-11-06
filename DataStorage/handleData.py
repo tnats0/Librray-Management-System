@@ -9,9 +9,9 @@ from database.pool import get_cursor
 def append_book_data(bookData:dict,location="books"):
 
 
-    appendCommand = f"INSERT {location} VALUES(%s,%s,%s,%s);"
+    appendCommand = f"INSERT INTO {location} VALUES(%s,%s,%s,%s);"
 
-    values = [location,bookData["isbn"],bookData["title"],bookData["authors"],bookData["publisher"]]
+    values = [bookData["isbn"],bookData["title"],bookData["authors"],bookData["publisher"]]
 
     with get_cursor(commit=True) as cur:
 
@@ -49,13 +49,13 @@ def get_shelf(shelf_name="books")->Shelf:
 def get_book(title,shelf="books"):
 
 
-    command = "SELECT * FROM %s WHERE title = %s;"
+    command = f"SELECT * FROM {shelf} WHERE title = %s LIMIT 1;"
 
     with get_cursor() as cur:
 
-        cur.execute(command,[shelf,title])
+        cur.execute(command,[title])
 
-        return cur.fetchall()
+        return cur.fetchone()
 
 
 
