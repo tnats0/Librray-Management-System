@@ -19,11 +19,31 @@ def add_book_to_shelf(isbn:str):
     with pool.get_cursor() as cur:
 
         cur.execute(command,[isbn])
+        
 
+def remove_book_from_shelf(isbn:str):
 
+    command = "DELETE FROM shelf_books WHERE isbn = %s;"
+
+    with pool.get_cursor() as cur:
+
+        cur.execute(command,[isbn])
+
+    
 def delete_shelf(shelf_name:str):
-    pass
 
+    command = "DELETE FROM shelves WHERE shelf_name = (%s);"
 
+    with pool.get_cursor() as cur:
+
+        cur.execute(command,[shelf_name])
+
+    
 def get_shelf_data(shelf_name:str):
-    pass
+
+    command = "SELECT * FROM shelves WHERE shelf_name = %s;"
+
+    with pool.get_cursor() as cur:
+
+        cur.execute(command,[shelf_name])
+    

@@ -30,7 +30,3 @@ def display(shelf:Shelf):
     console.print(table)
     
 
-
-
-
-        
