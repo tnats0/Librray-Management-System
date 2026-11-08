@@ -1,4 +1,5 @@
 import DataStorage.handleData as hData
+import DataStorage.shelves as sData
 
 class Book:
 
@@ -31,21 +32,22 @@ class Book:
 
 class Shelf:
 
-    def __init__(self,name:str,books:list[Book],filter:dict=None):
+    def __init__(self,id,name:str):
+        self.id = id
         self.name = name
-        self.books = books
-        self.filter = filter
+        self.books = None
 
     def __repr__(self):
 
-        return f"{self.__dir__}"
+        return self.__dict__()
 
 
     def addToShelf(self,book:Book):
 
-        self.books.append(book)
+
+        sData.add_book_to_shelf(book.isbn,self.id)
 
     def removeFromShelf(self,book:Book):
+        pass
 
-        self.books.remove(book)
 
