@@ -2,10 +2,8 @@
 BEGIN;
 
 SELECT * FROM shelves;
-SELECT * FROM books;
 
-SELECT * FROM shelf_books;
-
+SELECT books.title,books.authors,books.publisher FROM books INNER JOIN shelf_books ON shelf_books.isbn = books.isbn WHERE shelf_id = 6;
 
 ROLLBACK;
 

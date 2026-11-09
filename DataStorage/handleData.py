@@ -18,15 +18,6 @@ def add_book(bookData:dict):
         cur.execute(appendCommand,values)
 
 
-def turn_into_shelf(name,books:tuple):
-
-    books = list(books)
-
-    shelf = Shelf(name,books)
-
-    return shelf
-
-
 
 def get_book(title):
 

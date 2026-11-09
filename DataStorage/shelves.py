@@ -41,7 +41,7 @@ def delete_shelf(shelf_id):
     
 def get_shelf_data(shelf_id):
 
-    command = "SELECT * FROM shelves WHERE shelf_id = %s;"
+    command = "SELECT shelf_id,shelf_name FROM shelves WHERE shelf_id = %s;"
 
     with pool.get_cursor() as cur:
 
@@ -51,7 +51,8 @@ def get_shelf_data(shelf_id):
 
 def get_shelf_books(shelf_id):
 
-    command = "SELECT * FROM shelf_books WHERE shelf_id = %s;"
+    command = """SELECT books.title,books.authors,books.publisher FROM books INNER JOIN shelf_books ON
+    shelf_books.isbn = books.isbn WHERE shelf_id = %s;"""
 
     with pool.get_cursor() as cur:
 
@@ -59,3 +60,6 @@ def get_shelf_books(shelf_id):
 
         return cur.fetchall()
 
+def turn_into_shelf(shelf_id):
+
+    pass

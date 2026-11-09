@@ -53,7 +53,7 @@ def menu():
      add(code)
 
 
-book_isbn = get_book("Donusum")[0]
 
-add_book_to_shelf(book_isbn)
 
+
+display()
