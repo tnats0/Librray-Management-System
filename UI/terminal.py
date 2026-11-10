@@ -13,17 +13,15 @@ def display(shelf:Shelf):
 
     totalBooks = len(books)
 
-    table = Table(title=f"Books In The Library ({totalBooks})")
+    table = Table(title=f"Books In {shelf.name} ({totalBooks})")
 
     table.add_column("Number")
-    table.add_column("ISBN")
     table.add_column("Title")
     table.add_column("Author")
-    table.add_column("Publishers")
+    table.add_column("Publisher")
+    table.add_column("ISBN")
 
     for i,book in enumerate(books):
-
-        book = turn_into_book(book)
 
         table.add_row(str(i+1),book.title,book.author,book.publisher,book.isbn)
 

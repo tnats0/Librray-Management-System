@@ -53,7 +53,11 @@ def menu():
      add(code)
 
 
+name = input("Shelf name: ")
+
+result = turn_into_shelf(name)
+
+display(result)
 
 
 
-display()

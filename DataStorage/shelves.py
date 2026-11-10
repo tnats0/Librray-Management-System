@@ -41,7 +41,7 @@ def delete_shelf(shelf_id):
     
 def get_shelf_data(shelf_id):
 
-    command = "SELECT shelf_id,shelf_name FROM shelves WHERE shelf_id = %s;"
+    command = "SELECT * FROM shelves WHERE shelf_id = %s;"
 
     with pool.get_cursor() as cur:
 
@@ -51,7 +51,7 @@ def get_shelf_data(shelf_id):
 
 def get_shelf_books(shelf_id):
 
-    command = """SELECT books.title,books.authors,books.publisher FROM books INNER JOIN shelf_books ON
+    command = """SELECT books.title,books.authors,books.publisher,books.isbn FROM books INNER JOIN shelf_books ON
     shelf_books.isbn = books.isbn WHERE shelf_id = %s;"""
 
     with pool.get_cursor() as cur:
@@ -60,6 +60,31 @@ def get_shelf_books(shelf_id):
 
         return cur.fetchall()
 
-def turn_into_shelf(shelf_id):
 
-    pass
+def get_shelf_id(shelf_name):
+
+    command = "SELECT shelf_id FROM shelves WHERE shelf_name LIKE %s LIMIT 1;"
+
+    with pool.get_cursor() as cur:
+
+        cur.execute(command,[shelf_name])
+
+        return cur.fetchone()[0]
+    
+
+def turn_into_shelf(shelf_name):
+
+    shelf_id = get_shelf_id(shelf_name)
+
+    shelf_books = get_shelf_books(shelf_id)
+
+    for i in range(len(shelf_books)):
+
+        shelf_books[i] = hd.turn_into_book(shelf_books[i])
+    
+
+    shelf = bcs.Shelf(shelf_id,shelf_name,shelf_books)
+
+
+    return shelf
+    

@@ -3,7 +3,7 @@ import DataStorage.shelves as sData
 
 class Book:
 
-    def __init__(self,isbn,title,author,publisher):
+    def __init__(self,title,author,publisher,isbn):
         self.title = title
         self.author = author
         self.publisher = publisher
@@ -32,10 +32,10 @@ class Book:
 
 class Shelf:
 
-    def __init__(self,id,name:str):
+    def __init__(self,id,name:str,books:list[Book]):
         self.id = id
         self.name = name
-        self.books = None
+        self.books = books
 
     def __repr__(self):
 
