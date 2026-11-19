@@ -1,6 +1,6 @@
 # Library Management System (LibraryOS)
 
-A simple Python library management application with MySQL database and a terminal CLI. Add books by ISBN, organize them into custom shelves/collections, and scan barcodes.In the future, this project might be an app to store and manage any type of media product (books,movies,games,etc.)
+A simple library management application with MySQL database and a terminal CLI. Add books by ISBN, organize them into custom shelves/collections, and scan barcodes.In the future, this project might be an app to store and manage any type of media product (books,movies,games,etc.)
 
 ## Features
 
