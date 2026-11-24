@@ -1,63 +1,31 @@
-from DataStorage.handleData import *
-from DataStorage.shelves import *
-from DataProcess.recoverData import *
-from UI.terminal import *
-import time
-import random
-
-import dotenv
+from UI.terminal import run_cli
+from DataStorage.shelves import get_shelf_id, turn_into_shelf
 import os
+import dotenv
+from rich.console import Console # Needed for error handling outside run_cli
+
+console = Console()
 
 dotenv.load_dotenv(".env",override=True)
 
 API_KEY = os.getenv("API_KEY")
 
-def add(code):
-    
-    if check_data(code):
-                
-        print("Book is already in library")
+def main():
+    try:
+        DEFAULT_SHELF_NAME = "Default Collection"
+        # Check if shelf exists
+        shelf_id = get_shelf_id(DEFAULT_SHELF_NAME)
+        
+        if shelf_id is None:
+            console.print(f"[yellow]Shelf '{DEFAULT_SHELF_NAME}' not found. Creating it now.[/yellow]")
+            create_shelf(DEFAULT_SHELF_NAME)
+            # After creation, retrieve the ID again (or rely on turn_into_shelf)
+            shelf_id = get_shelf_id(DEFAULT_SHELF_NAME)
+            
+        shelf = turn_into_shelf(DEFAULT_SHELF_NAME)
+        run_cli(shelf)
+    except Exception as e:
+        console.print(f"[bold red]Failed to initialize CLI: {e}[/bold red]")
 
-    else:
-        print("Book not found. Searching...")
-
-        result = find_book(code,API_KEY)
-
-        while result == 503:
-
-            result = find_book(code,API_KEY)
-            time.sleep(random.randint(1,5))
-            print("Requesting again")
-
-
-        try:
-
-                print("Inserting the book to the database...")
-
-                add_book(result)
-
-                print("Book has successfuly inserted!")
-
-        except Exception as err :
-
-                print(f"Operation failed :( : {result}")
-                print(f"An error occured : {err}")
-
-                time.sleep(random.randint(1,5))
-
-
-def menu():
-     
-     code = input("ISBN: ")
-
-     add(code)
-
-
-name = input("Shelf name: ")
-
-result = turn_into_shelf(name)
-
-display(result)
-
-
-
+if __name__ == "__main__":
+    main()

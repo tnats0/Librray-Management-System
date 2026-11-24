@@ -24,10 +24,10 @@ INSERT INTO books (isbn, title, authors, publisher) VALUES
 ('9780201616224', 'Large-Scale C++ Software Design', 'John Lakos', 'Addison-Wesley'),
 ('9780131177053', 'Test Driven Development: By Example', 'Kent Beck', 'Addison-Wesley'),
 ('9780321146533', 'Clean Architecture: A Craftsman\'s Guide to Software Structure and Design', 'Robert C. Martin', 'Prentice Hall'),
-('9780134685984', 'Python Crash Course', 'Eric Matthes', 'No Starch Press'),
+('9780134692883', 'Python Crash Course', 'Eric Matthes', 'No Starch Press'),
 ('9781491919518', 'Fluent Python: Clear, Concise, and Effective Programming', 'Luciano Ramalho', "O'Reilly Media"),
 ('9780596517748', 'Python Cookbook', 'David Beazley, Brian K. Jones', "O'Reilly Media"),
-('9780134692883', 'JavaScript: The Good Parts', 'Douglas Crockford', "O'Reilly Media"),
+('9780134685984', 'JavaScript: The Good Parts', 'Douglas Crockford', "O'Reilly Media"),
 ('9780321835203', 'HTML and CSS: Design and Build Websites', 'Jon Duckett', 'Wiley'),
 ('9780596007126', 'Learning Python', 'Mark Lutz', "O'Reilly Media");
 
@@ -35,6 +35,7 @@ INSERT INTO books (isbn, title, authors, publisher) VALUES
 -- Sample custom shelves
 -- ============================================
 INSERT INTO shelves (shelf_name) VALUES
+('Default Collection'), -- <-- ADDED DEFAULT SHELF HERE
 ('Favorites'),
 ('To Read'),
 ('Science Fiction'),
@@ -43,23 +44,26 @@ INSERT INTO shelves (shelf_name) VALUES
 -- ============================================
 -- Associate books with shelves (shelf_books)
 -- ============================================
--- Shelf 1 = Favorites
-INSERT INTO shelf_books (shelf_id, isbn) VALUES
-(5, '9780132350884'),
-(5, '9780201633610');
+-- Shelf IDs will now start from 1 due to initialization reset
 
--- Shelf 2 = To Read
+-- Shelf 1 = Default Collection (No books in seed data)
+-- Shelf 2 = Favorites
 INSERT INTO shelf_books (shelf_id, isbn) VALUES
-(6, '9780596009205'),
-(6, '9780134685991');
+(2, '9780132350884'),
+(2, '9780201633610');
 
--- Shelf 3 = Science Fiction
+-- Shelf 3 = To Read
 INSERT INTO shelf_books (shelf_id, isbn) VALUES
-(7, '9780131103627');
+(3, '9780596009205'),
+(3, '9780134685991');
 
--- Shelf 4 = Classics
+-- Shelf 4 = Science Fiction
 INSERT INTO shelf_books (shelf_id, isbn) VALUES
-(8, '9780131103627');
+(4, '9780131103627');
+
+-- Shelf 5 = Classics
+INSERT INTO shelf_books (shelf_id, isbn) VALUES
+(5, '9780131103627');
 
 -- ============================================
 -- Sample favorites table entries

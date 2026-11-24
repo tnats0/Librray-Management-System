@@ -3,7 +3,10 @@ BEGIN;
 
 SELECT * FROM shelves;
 
-SELECT books.title,books.authors,books.publisher FROM books INNER JOIN shelf_books ON shelf_books.isbn = books.isbn WHERE shelf_id = 6;
+SELECT * FROM shelf_books;
+
+INSERT INTO shelves (shelf_name) VALUES
+('Default Collection')
 
 ROLLBACK;
 

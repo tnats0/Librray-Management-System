@@ -8,7 +8,6 @@ from database.pool import get_cursor
 
 def add_book(bookData:dict):
 
-
     appendCommand = "INSERT INTO books (isbn,title,authors,publisher) VALUES (%s,%s,%s,%s);"
 
     values = [bookData["isbn"],bookData["title"],bookData["authors"],bookData["publisher"]]
@@ -18,9 +17,7 @@ def add_book(bookData:dict):
         cur.execute(appendCommand,values)
 
 
-
 def get_book(title):
-
 
     command = "SELECT * FROM books WHERE title = %s LIMIT 1;"
 
@@ -31,6 +28,14 @@ def get_book(title):
         return cur.fetchone()
 
 
+def search_books_by_term(search_term: str):
+
+    command = "SELECT * FROM books WHERE title LIKE %s OR authors LIKE %s;"
+    search_pattern = f"%{search_term}%"
+
+    with get_cursor() as cur:
+        cur.execute(command, (search_pattern, search_pattern))
+        return cur.fetchall()
 
 
 def turn_into_book(book_data:tuple):
@@ -40,12 +45,10 @@ def turn_into_book(book_data:tuple):
     return book
 
 
-
-
 def check_data(isbn):
 
     command = "SELECT * FROM books WHERE isbn = %s LIMIT 1"
-    
+
     with get_cursor() as cur:
 
         cur.execute(command,[isbn])
@@ -53,5 +56,3 @@ def check_data(isbn):
         isAvaliable = cur.fetchall()
 
     return 1 if isAvaliable else 0
-
-

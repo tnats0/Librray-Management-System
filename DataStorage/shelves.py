@@ -62,14 +62,12 @@ def get_shelf_books(shelf_id):
 
 
 def get_shelf_id(shelf_name):
-
     command = "SELECT shelf_id FROM shelves WHERE shelf_name LIKE %s LIMIT 1;"
-
+    
     with pool.get_cursor() as cur:
-
         cur.execute(command,[shelf_name])
-
-        return cur.fetchone()[0]
+        result = cur.fetchone()
+        return result[0] if result else None
     
 
 def turn_into_shelf(shelf_name):
