@@ -9,7 +9,7 @@ A simple library management application with MySQL database and a terminal CLI. 
 - View books on a shelf
 - Add/remove books from shelves
 - Create and delete shelves
-- Terminal-based UI for quick ISBN entry
+- Terminal-based UI
 
 ## Tech Stack
 
